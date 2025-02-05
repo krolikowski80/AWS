@@ -104,6 +104,3 @@ To polecenie powinno wyświetlić listę Twoich zasobów w S3, jeśli masz dost�
 
 ---
 
-**Gratulacje!** Teraz masz skonfigurowane AWS CLI na Macu M1 i możesz zacząć zarządzać swoimi zasobami AWS za pomocą wiersza poleceń.
-
-Jeśli masz jakiekolwiek pytania, nie wahaj się zapytać!
