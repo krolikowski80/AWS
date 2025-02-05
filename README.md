@@ -28,4 +28,3 @@ To miejsce, gdzie będę dokumentować swoją naukę AWS – od podstawowych kom
 Jeśli masz jakieś pytania, sugestie lub chcesz się podzielić wiedzą, śmiało otwórz issue! 🚀
 
 ---
- Je

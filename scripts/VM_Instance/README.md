@@ -1,5 +1,7 @@
 ## Instalacja podstawowych bibliotek i klucza SSH
 ## [Zarządzanie instancjami Amazon EC2](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-managing-instances.html)
+## [Zabawa z EC2 wg dokumentacji](https://docs.aws.amazon.com/code-library/latest/ug/python_3_ec2_code_examples.html)
+## [A to może pomóc](https://www.youtube.com/watch?v=9GQEjkBqYv4)
 
 ### Zainstaluję biblioteki:
 - do przechowywania wrażliwych zmiennych poza kodem:
