@@ -1,5 +1,5 @@
 # Konfiguracja `pyenv` i `virtualenv` na Mac do pracy z AWS
-## [Kożystam z tutoriali - Realpython](https://realpython.com/intro-to-pyenv/)
+## [Korzystam z tutoriali - Realpython](https://realpython.com/intro-to-pyenv/)
 
 ## Wprowadzenie
 
