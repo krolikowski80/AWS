@@ -18,7 +18,7 @@ aws ec2 create-key-pair \
 ```
 🔹 **Ustawienie poprawnych uprawnień do pliku:**
 
-**To ważne**, poniewarz z innymi uprawnieniami nie klucz nie zostanie zaakceptowany. 
+**To ważne**, poniewarz z innymi uprawnieniami klucz nie zostanie zaakceptowany. 
 
 ```sh
 chmod 400 MyTestKey.pem
