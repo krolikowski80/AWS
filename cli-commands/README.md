@@ -30,8 +30,14 @@ Sprawdź, czy AWS CLI zostało poprawnie zainstalowane:
 ```bash
 aws --version
 ```
-
 Powinna się wyświetlić wersja AWS CLI, np. `aws-cli/2.x.x`.
+
+Zainstaluj `jq`** (jeśli nie masz):  
+```sh
+brew install jq  # dla macOS
+sudo apt install jq  # dla Ubuntu/Debian
+sudo yum install jq  # dla CentOS
+```
 
 ## 3. Tworzenie kluczy dostępu w AWS
 
