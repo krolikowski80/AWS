@@ -379,3 +379,276 @@ aws ec2 describe-instances \
 ✅ **Sprawdzam, czy instancja działa oraz jaki ma publiczny adres IP.**  
 
 ---
+# 🔗 Połączenie z instancją EC2 przez SSH
+
+W tym kroku połączę się do mojej instancji EC2 za pomocą **SSH**.
+
+---
+
+## **7️⃣ Połączenie do EC2 przez SSH**  
+
+> **SSH (Secure Shell)** umożliwia bezpieczne zdalne zarządzanie instancją EC2.
+
+📌 **Co zrobiłem w tym kroku?**  
+- Sprawdziłem **publiczny adres IP** instancji.  
+- Połączyłem się do instancji za pomocą **SSH i klucza `.pem`**.  
+
+---
+
+### **🖥️ Pobranie publicznego IP instancji**
+```bash
+PUBLIC_IP=$(aws ec2 describe-instances   --instance-ids $INSTANCE_ID   --query 'Reservations[0].Instances[0].PublicIpAddress'   --output text)
+
+echo "PUBLIC_IP=$PUBLIC_IP" >> .env
+
+echo "Instancja EC2 jest dostępna pod adresem: $PUBLIC_IP"
+```
+✅ **Pobieram publiczny adres IP instancji EC2 i zapisuję go do `.env`.**  
+
+---
+
+### **🖥️ Połączenie przez SSH**
+```bash
+ssh -i ${KEY_NAME}.pem ec2-user@$PUBLIC_IP
+```
+✅ **Łączę się do instancji EC2 jako użytkownik `ec2-user`.**  
+
+---
+
+### **🖥️ Sprawdzanie, czy instancja działa**
+```bash
+aws ec2 describe-instance-status   --instance-ids $INSTANCE_ID   --query 'InstanceStatuses[*].[InstanceId, InstanceState.Name, SystemStatus.Status, InstanceStatus.Status]'   --output table
+```
+✅ **Sprawdzam status instancji (`running` oraz `ok`).**  
+
+---
+
+## **✅ Co dalej?**
+1. **Upewniam się, że mogę zalogować się do instancji EC2 przez SSH.**  
+2. **Jeśli połączenie działa, mogę skonfigurować dodatkowe usługi na instancji.**  
+3. **W kolejnym kroku przygotuję instancję do działania jako serwer WWW.**  
+
+🚀 **Połączenie SSH do instancji EC2 działa!**  
+
+---
+
+
+# 🌍 Instalacja serwera WWW na EC2
+
+W tym kroku skonfigurowałem instancję EC2 jako serwer WWW.
+
+---
+
+## **8️⃣ Instalacja i konfiguracja serwera WWW**  
+
+> **Apache HTTP Server** to popularny serwer WWW, który pozwala na hostowanie stron internetowych.
+
+📌 **Co zrobiłem w tym kroku?**  
+- Zainstalowałem **Apache HTTP Server**.  
+- Skonfigurowałem **automatyczne uruchamianie serwera** po restarcie.  
+- Dodałem **stronę testową**, aby sprawdzić działanie.  
+
+---
+
+### **🖥️ Aktualizacja pakietów i instalacja Apache**
+```bash
+sudo yum update -y
+
+sudo yum install -y httpd
+```
+✅ **Aktualizuję pakiety i instaluję Apache HTTP Server.**  
+
+---
+
+### **🖥️ Uruchomienie serwera Apache**
+```bash
+sudo systemctl start httpd
+
+sudo systemctl enable httpd
+```
+✅ **Uruchamiam serwer WWW i włączam jego automatyczne uruchamianie.**  
+
+---
+
+### **🖥️ Tworzenie testowej strony internetowej**
+```bash
+echo "<h1>Serwer WWW działa poprawnie!</h1>" | sudo tee /var/www/html/index.html
+```
+✅ **Tworzę stronę testową w katalogu `/var/www/html`.**  
+
+---
+
+### **🖥️ Sprawdzanie statusu serwera Apache**
+```bash
+sudo systemctl status httpd
+```
+✅ **Upewniam się, że serwer działa poprawnie.**  
+
+---
+
+### **🖥️ Testowanie dostępu do strony WWW**
+```bash
+curl http://localhost
+```
+✅ **Sprawdzam, czy strona testowa jest dostępna lokalnie.**  
+
+---
+
+## **✅ Co dalej?**
+1. **Sprawdzam, czy strona jest dostępna z przeglądarki, wpisując `http://PUBLIC_IP`.**  
+2. **Jeśli wszystko działa, serwer WWW jest gotowy do użycia!**  
+3. **W kolejnym kroku zabezpieczę serwer i zoptymalizuję jego konfigurację.**  
+
+🚀 **Serwer WWW działa na EC2!**  
+
+---
+
+
+# 🔒 Zabezpieczenie i optymalizacja serwera WWW
+
+W tym kroku zabezpieczyłem serwer Apache i zoptymalizowałem jego działanie.
+
+---
+
+## **9️⃣ Zabezpieczenie i optymalizacja serwera**  
+
+> **Dobre praktyki bezpieczeństwa** pomagają chronić serwer przed atakami i optymalizują jego wydajność.
+
+📌 **Co zrobiłem w tym kroku?**  
+- Skonfigurowałem **firewalla**, aby ograniczyć dostęp do serwera.  
+- Usunąłem **zbędne moduły** Apache.  
+- Skonfigurowałem **limit zasobów**, aby zwiększyć wydajność.  
+
+---
+
+### **🖥️ Konfiguracja firewalla**
+```bash
+sudo yum install -y firewalld
+
+sudo systemctl start firewalld
+
+sudo systemctl enable firewalld
+
+sudo firewall-cmd --permanent --add-service=http
+
+sudo firewall-cmd --permanent --add-service=https
+
+sudo firewall-cmd --reload
+```
+✅ **Włączam firewalla i zezwalam tylko na ruch HTTP i HTTPS.**  
+
+---
+
+### **🖥️ Usunięcie zbędnych modułów Apache**
+```bash
+sudo sed -i 's/^LoadModule status_module/#LoadModule status_module/' /etc/httpd/conf/httpd.conf
+
+sudo sed -i 's/^LoadModule autoindex_module/#LoadModule autoindex_module/' /etc/httpd/conf/httpd.conf
+
+sudo systemctl restart httpd
+```
+✅ **Wyłączam zbędne moduły, aby zwiększyć bezpieczeństwo.**  
+
+---
+
+### **🖥️ Optymalizacja konfiguracji Apache**
+```bash
+echo "KeepAlive On" | sudo tee -a /etc/httpd/conf/httpd.conf
+
+echo "MaxKeepAliveRequests 100" | sudo tee -a /etc/httpd/conf/httpd.conf
+
+echo "KeepAliveTimeout 5" | sudo tee -a /etc/httpd/conf/httpd.conf
+
+sudo systemctl restart httpd
+```
+✅ **Włączam `KeepAlive`, aby zmniejszyć liczbę połączeń HTTP i poprawić wydajność.**  
+
+---
+
+## **✅ Co dalej?**
+1. **Sprawdzam, czy firewall działa poprawnie (`sudo firewall-cmd --list-all`).**  
+2. **Testuję stronę WWW, aby upewnić się, że optymalizacja nie wpłynęła negatywnie na jej działanie.**  
+3. **W kolejnym kroku przygotuję instrukcję czyszczenia zasobów AWS.**  
+
+🚀 **Serwer WWW jest teraz zabezpieczony i zoptymalizowany!**  
+
+---
+
+
+# 🧹 Usuwanie zasobów AWS
+
+W tym kroku usunąłem wszystkie zasoby AWS, aby nie ponosić zbędnych kosztów.
+
+---
+
+## **🔄 Usuwanie instancji EC2**  
+```bash
+aws ec2 terminate-instances   --instance-ids $INSTANCE_ID
+```
+✅ **Zatrzymuję i usuwam instancję EC2.**  
+
+---
+
+## **🔄 Usuwanie Security Groups**  
+```bash
+aws ec2 delete-security-group   --group-id $SEC_GROUP_WEB_ID
+
+aws ec2 delete-security-group   --group-id $SEC_GROUP_PRIVATE_ID
+```
+✅ **Usuwam Security Groups, które były przypisane do instancji.**  
+
+---
+
+## **🔄 Usuwanie klucza SSH**  
+```bash
+aws ec2 delete-key-pair   --key-name $KEY_NAME
+
+rm -f ${KEY_NAME}.pem
+```
+✅ **Usuwam klucz SSH z AWS i lokalnego systemu.**  
+
+---
+
+## **🔄 Usuwanie tablic routingu**  
+```bash
+aws ec2 delete-route-table   --route-table-id $ROUTE_TABLE_PUBLIC_ID
+
+aws ec2 delete-route-table   --route-table-id $ROUTE_TABLE_PRIVATE_ID
+```
+✅ **Usuwam tablice routingu.**  
+
+---
+
+## **🔄 Odłączenie i usunięcie Internet Gateway**  
+```bash
+aws ec2 detach-internet-gateway   --internet-gateway-id $IGW_ID   --vpc-id $VPC_ID
+
+aws ec2 delete-internet-gateway   --internet-gateway-id $IGW_ID
+```
+✅ **Odłączam i usuwam Internet Gateway.**  
+
+---
+
+## **🔄 Usuwanie subnetów**  
+```bash
+aws ec2 delete-subnet   --subnet-id $SUBNET_PUBLIC_ID
+
+aws ec2 delete-subnet   --subnet-id $SUBNET_PRIVATE_ID
+```
+✅ **Usuwam subnety w VPC.**  
+
+---
+
+## **🔄 Usuwanie VPC**  
+```bash
+aws ec2 delete-vpc   --vpc-id $VPC_ID
+```
+✅ **Usuwam całą VPC i wszystkie pozostałe zasoby.**  
+
+---
+
+## **✅ AWS został wyczyszczony!**  
+Wszystkie zasoby zostały usunięte, aby uniknąć dodatkowych kosztów.  
+
+🚀 **Projekt zakończony!**  
+
