@@ -56,14 +56,26 @@ Najpierw utworzę plik `.env`, który będzie przechowywał dane konfiguracyjne:
 > 📌 Aby utworzyć Security Group:
 >
 > ```bash
-> SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name rds-access-sg --description "Security Group dla RDS" --vpc-id $(aws ec2 describe-vpcs --query "Vpcs[0].VpcId" --output text) --query "GroupId" --output text)
+> SECURITY_GROUP_ID=$(aws ec2 create-security-group \
+      --group-name rds-access-sg \
+      --description "Security Group dla RDS" \
+      --vpc-id \
+          $(aws ec2 describe-vpcs \
+          --query "Vpcs[0].VpcId" \
+          --output text) \
+      --query "GroupId" \
+      --output text)
 > echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> .env
 > ```
 
 > 📌 Dodaje regułę dla MySQL (port 3306, dostęp z internetu):
 >
 > ```bash
-> aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 3306 --cidr 0.0.0.0/32
+> aws ec2 authorize-security-group-ingress \
+    --group-id $SECURITY_GROUP_ID \
+    --protocol tcp \
+    --port 3306 \
+    --cidr 0.0.0.0/32
 > ```
 
 ---
@@ -127,7 +139,7 @@ Aby sprawdzić listę baz w MySQL RDS:
 Aby usunąć bazę MySQL w AWS RDS:
 
 > ```bash
-> aws rds delete-db-instance --db-instance-identifier student-database --skip-final-snapshot
+> aws rds delete-db-instance \
+    --db-instance-identifier student-database \
+    --skip-final-snapshot
 > ```
-
-Potwierdź usunięcie, a AWS automatycznie zamknie instancję.
