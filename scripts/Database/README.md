@@ -32,11 +32,9 @@ Ten projekt zawiera skrypty w Pythonie do tworzenia i zarządzania bazą danych 
 ## 🔹 1. Konfiguracja `.env`
 
 Najpierw utworzę plik `.env`, który będzie przechowywał dane konfiguracyjne:
-<details>
-  <summary>📜 .env`</summary>
 
 > ```bash
-> AWS_REGION=us-east-1
+> AWS_REGION=eu-central-1
 > DB_INSTANCE_IDENTIFIER=student-database
 > DB_NAME=student_db
 > DB_USERNAME=admin
@@ -48,7 +46,7 @@ Najpierw utworzę plik `.env`, który będzie przechowywał dane konfiguracyjne:
 > DB_ENDPOINT=
 > SECURITY_GROUP_ID=
 > ```
-</details>
+
 ---
 
 ## 🔹 2. Tworzenie Security Group dla RDS
@@ -57,32 +55,37 @@ Najpierw utworzę plik `.env`, który będzie przechowywał dane konfiguracyjne:
 >
 > ```bash
 > SECURITY_GROUP_ID=$(aws ec2 create-security-group \
-      --group-name rds-access-sg \
-      --description "Security Group dla RDS" \
-      --vpc-id \
-          $(aws ec2 describe-vpcs \
-          --query "Vpcs[0].VpcId" \
-          --output text) \
-      --query "GroupId" \
-      --output text)
+>      --group-name rds-access-sg \
+>      --description "Security Group dla RDS" \
+>      --vpc-id \
+>          $(aws ec2 describe-vpcs \
+>          --query "Vpcs[0].VpcId" \
+>          --output text) \
+>      --query "GroupId" \
+>      --output text)
+>```
+
+>```bash
 > echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> .env
 > ```
 
-> 📌 Dodaje regułę dla MySQL (port 3306, dostęp z internetu):
->
+📌 Dodam regułę dla MySQL (port 3306, dostęp z internetu):
+
 > ```bash
 > aws ec2 authorize-security-group-ingress \
-    --group-id $SECURITY_GROUP_ID \
-    --protocol tcp \
-    --port 3306 \
-    --cidr 0.0.0.0/32
+>    --group-id $SECURITY_GROUP_ID \
+>    --protocol tcp \
+>    --port 3306 \
+>    --cidr 0.0.0.0/32
 > ```
 
 ---
 
 ## 🔹 3. Tworzenie bazy danych na AWS RDS
 
-Sskrypt `create_database.py` utworzy instancję MySQL na AWS i zapisze jej **endpoint** do `.env`.
+Skrypt `create_database.py` utworzy instancję MySQL na AWS i zapisze jej **endpoint** do `.env`.
+
+> 📌 Uruchomię skrypt:
 >
 > ```bash
 > python create_database.py
@@ -91,8 +94,8 @@ Sskrypt `create_database.py` utworzy instancję MySQL na AWS i zapisze jej **end
 > Skrypt:
 >
 > - Tworzy bazę na AWS RDS.
-> - Czeka na jej gotowość.
-> - Aktualizuje plik `.env` o `DB_ENDPOINT`.
+> - Czeka na jej gotowość - odświerza co 30s
+> - Aktualizuje plik `.env` o `DB_ENDPOINT`
 
 🔎 Po zakończeniu w `.env` pojawi się `DB_ENDPOINT=student-database.xxxx.us-east-1.rds.amazonaws.com`.
 
@@ -102,44 +105,27 @@ Sskrypt `create_database.py` utworzy instancję MySQL na AWS i zapisze jej **end
 
 Program `students.py` umożliwia zarządzanie studentami i ocenami w bazie.
 
-> 📌 Uruchomienie:
+> 📌 Uruchomię program:
 >
 > ```bash
 > python students.py
 > ```
 >
-> Wybierz opcję:
+> opcje:
 > 1️⃣ Dodaj studenta
 > 2️⃣ Dodaj ocenę
 > 3️⃣ Wyświetl studentów
-> 4️⃣ Wyjście
+> 4️⃣ Zakończ działanie programu
 
 ---
-
-## 🔹 5. Sprawdzenie bazy MySQL w AWS CLI
-
-Aby sprawdzić listę baz w MySQL RDS:
-
-> 📌 Połącz się do MySQL przez CLI:
->
-> ```bash
-> mysql -h your-db-endpoint.rds.amazonaws.com -u admin -p
-> ```
->
-> Jakie mamy tablice:
->
-> ```sql
-> SHOW DATABASES;
-> ```
-
----
-
-## 🔹 6. Usunięcie bazy RDS
+## 🔹 5. Usunięcie bazy RDS
 
 Aby usunąć bazę MySQL w AWS RDS:
 
+> 📌 Wykonam polecenie:
+>
 > ```bash
 > aws rds delete-db-instance \
-    --db-instance-identifier student-database \
-    --skip-final-snapshot
+>    --db-instance-identifier student-database \
+>    --skip-final-snapshot
 > ```
