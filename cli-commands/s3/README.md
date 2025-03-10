@@ -172,6 +172,3 @@ s3fs nazwa-twojego-bucketa /Volumes/S3 -o passwd_file=~/.passwd-s3fs -o allow_ot
 | **s3fs** | ✅ | ✅ | Pełna integracja z systemem |
 
 📌 **Rekomendacja**: **Użyj Rclone, jeśli potrzebujesz prostego montowania.** Jeśli chcesz pełnej integracji – **s3fs**.
-
-🚀 **Teraz możesz korzystać z AWS S3 jak z normalnego dysku!** Jeśli masz pytania – daj mi znać! 😊
-
