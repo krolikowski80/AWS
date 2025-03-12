@@ -73,7 +73,17 @@ aws s3 rb s3://nazwa-twojego-bucketa --force
 }
 ```
 📌 **Blokuje dostęp dla wszystkich poza właścicielem.**
-
+#### Przekazanie polityki z pliku JSON
+```bash
+aws s3api put-bucket-policy \
+    --bucket nazwa-twojego-bucketu \
+    --policy file://bucket_policy.json
+```
+#### Sprawdzenie aktualnej polityki
+```bash
+aws s3api get-bucket-policy \
+    --bucket nazwa-twojego-bucketu
+```
 ---
 
 ## 🔹 3. Montowanie S3 jako dysk w Windows
