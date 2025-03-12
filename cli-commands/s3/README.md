@@ -139,34 +139,6 @@ Dodaj do `crontab`:
 ```
 
 ---
-
-### **🛠 Metoda 2: s3fs**
-#### **1️⃣ Instalacja s3fs**
-```bash
-brew install s3fs
-```
-#### **2️⃣ Konfiguracja pliku z poświadczeniami**
-```bash
-echo "AWS_ACCESS_KEY_ID:AWS_SECRET_ACCESS_KEY" > ~/.passwd-s3fs
-chmod 600 ~/.passwd-s3fs
-```
-#### **3️⃣ Montowanie S3 jako `/Volumes/S3`**
-```bash
-mkdir -p /Volumes/S3
-s3fs nazwa-twojego-bucketa /Volumes/S3 -o passwd_file=~/.passwd-s3fs -o allow_other -o url=https://s3.eu-central-1.amazonaws.com
-```
-
----
-
-## ✅ Podsumowanie
-| Metoda | Windows | macOS | Zalety |
-|--------|---------|--------|--------|
-| **Rclone** | ✅ | ✅ | Proste, szybkie, stabilne |
-| **s3fs** | ✅ | ✅ | Pełna integracja z systemem |
-
-📌 **Rekomendacja**: **Użyj Rclone, jeśli potrzebujesz prostego montowania.** Jeśli chcesz pełnej integracji – **s3fs**.
-
----
 # Automatyczny Multipart Upload w AWS S3
 
 ## 1. Wprowadzenie
