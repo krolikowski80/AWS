@@ -76,7 +76,13 @@ Warto pamiętać:
    aws s3api get-bucket-policy \
        --bucket tkrolikowski-bucket01
    ```
-3. **Zastąp** dotychczasowy fragment polityki lub wklej powyższą politykę w całości (pamiętaj, żeby wstawić właściwą nazwę bucketa i poprawne ARNy).  
+3. **Zastąp** dotychczasowy fragment polityki lub wklej powyższą politykę w całości (pamiętaj, żeby wstawić właściwą nazwę bucketa i poprawne ARNy).
+
+   - znajdź swój ARN
+   ```bash
+   aws iam get-user --user-name t.krolikowski
+   ```
+
 4. **Wgraj** zaktualizowany plik (jeśli używasz CLI):  
    ```bash
    aws s3api put-bucket-policy \
